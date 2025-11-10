@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Калькулятор с музыкой и модалкой</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('https://otvet.cdn-vk.net/api/pictures/images/0e6e05189ee17cc8c50af903e2175dc16acafc52048c7371ccc34232e358d02518c7a3a6dc4f1ef2cc4417c8836dcb00.jpg?size=small');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .calculator {
+      background-image: url("https://otvet.cdn-vk.net/api/pictures/images/0e6e05189ee17cc8c50af903e2175dc16acafc52048c7371ccc34232e358d02518c7a3a6dc4f1ef2cc4417c8836dcb00.jpg?size=small")  ;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      width: 260px;
+      text-align: center;
+    }
+
+    .display {
+      background: #f3f3f3;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: right;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      overflow-x: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      padding: 15px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    /* Кнопка запуска музыки */
+    #startMusic {
+      margin-top: 15px;
+      background: #2196f3;
+      width: 100%;
+    }
+
+    /* Модалка */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background-image: url("https://media.istockphoto.com/id/1128200434/ru/%D1%84%D0%BE%D1%82%D0%BE/%D1%84%D0%BB%D0%B0%D0%B3%D0%B8-%D0%B8%D0%B7%D1%80%D0%B0%D0%B8%D0%BB%D1%8F-%D0%B8-%D1%83%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D1%8B.jpg?s=1024x1024&w=is&k=20&c=nFKM4A35KP42auD0nkh3Kr7qWtro3YGSHOBaQCg6E8o=");
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      text-align: center;
+      width: 300px;
+      max-width: 90%;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .modal-buttons button {
+      flex: 1;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .modal-buttons button:first-child {
+      background: #2196f3;
+    }
+
+    .modal-buttons button:last-child {
+      background: #f44336;
+    }
+
+    @keyframes fadeIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Фоновая музыка -->
+  <audio id="bg-music" loop>
+    <source src="sounPi.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Калькулятор -->
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button onclick="appendValue('/')">÷</button>
+
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button onclick="appendValue('*')">×</button>
+
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button onclick="appendValue('-')">−</button>
+
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
+      <button onclick="calculate()">=</button>
+      <button onclick="appendValue('+')">+</button>
+    </div>
+    <button id="startMusic">676767767676767676767676767676767676767</button>
+  </div>
+
+  <!-- Модальное окно -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <img src="PUDLE.jpg" alt="Модальная картинка">
+      <audio id="modal-music" loop>
+        <source src="phone-ringtone-meme.mp3" type="audio/mpeg">
+      </audio>
+      <div class="modal-buttons">
+        <button>Поднять</button>
+        <button id="close-modal">Сбросить</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    const modal = document.getElementById('modal');
+    const modalMusic = document.getElementById('modal-music');
+    const bgMusic = document.getElementById('bg-music');
+    const startBtn = document.getElementById('startMusic');
+
+    function appendValue(value) {
+      if (display.innerText === '0') display.innerText = value;
+      else display.innerText += value;
+    }
+
+    function calculate() {
+      try {
+        display.innerText = eval(display.innerText.replace('÷', '/').replace('×', '*'));
+      } catch {
+        display.innerText = 'Ошибка';
+      }
+    }
+
+    startBtn.addEventListener('click', () => {
+      bgMusic.play();
+      startBtn.disabled = true;
+      startBtn.innerText = "пУДЕЛЬ ПИДОР1488888";
+
+      // Модалка появится через 4 секунды
+      setTimeout(() => {
+        modal.classList.add('active');
+        modalMusic.play();
+      }, 4000);
+    });
+
+    // Закрытие модалки
+    document.getElementById('close-modal').addEventListener('click', () => {
+      modal.classList.remove('active');
+      modalMusic.pause();
+      modalMusic.currentTime = 0;
+    });
+  </script>
+</body>
+</html>
